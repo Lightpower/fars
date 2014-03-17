@@ -1,0 +1,4 @@
+fars
+====
+
+Fast ActiveRecord Serializer
