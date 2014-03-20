@@ -1,0 +1,87 @@
+GIT
+  remote: https://github.com/rack/rack-contrib.git
+  revision: 6ff3ca2b2d988911ca52a2712f6a7da5e064aa27
+  specs:
+    rack-contrib (1.2.0)
+      rack (>= 0.9.1)
+
+PATH
+  remote: .
+  specs:
+    fars (0.0.1)
+      activerecord (>= 3.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (4.0.4)
+      activesupport (= 4.0.4)
+      builder (~> 3.1.0)
+    activerecord (4.0.4)
+      activemodel (= 4.0.4)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.4)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.3)
+    activesupport (4.0.4)
+      i18n (~> 0.6, >= 0.6.9)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    arel (4.0.2)
+    atomic (1.1.16)
+    builder (3.1.4)
+    coderay (1.1.0)
+    columnize (0.3.6)
+    database_cleaner (1.2.0)
+    debugger (1.6.6)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.3.2)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.3.2)
+    diff-lcs (1.2.5)
+    i18n (0.6.9)
+    method_source (0.8.2)
+    minitest (4.7.5)
+    multi_json (1.9.2)
+    pry (0.9.12.6)
+      coderay (~> 1.0)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry-debugger (0.2.2)
+      debugger (~> 1.3)
+      pry (~> 0.9.10)
+    rack (1.5.2)
+    rake (10.1.1)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.8)
+    rspec-expectations (2.14.5)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.14.6)
+    shoulda (3.5.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (>= 1.4.1, < 3.0)
+    shoulda-context (1.1.6)
+    shoulda-matchers (2.5.0)
+      activesupport (>= 3.0.0)
+    slop (3.5.0)
+    thread_safe (0.2.0)
+      atomic (>= 1.1.7, < 2)
+    tzinfo (0.3.39)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  database_cleaner
+  fars!
+  pry-debugger
+  rack-contrib!
+  rake
+  rspec (>= 2.11)
+  shoulda
