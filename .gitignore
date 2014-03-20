@@ -19,3 +19,4 @@ doc/
 
 .ruby-*
 .rspec
+spec/config/database.yml
