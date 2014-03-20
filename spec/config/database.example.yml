@@ -1,0 +1,5 @@
+adapter:  postgresql
+database: fars_testing
+host:     localhost
+port:     5432
+username: rails
