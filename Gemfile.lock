@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/rack/rack-contrib.git
-  revision: 6ff3ca2b2d988911ca52a2712f6a7da5e064aa27
-  specs:
-    rack-contrib (1.2.0)
-      rack (>= 0.9.1)
-
 PATH
   remote: .
   specs:
@@ -46,6 +39,7 @@ GEM
     method_source (0.8.2)
     minitest (4.7.5)
     multi_json (1.9.2)
+    pg (0.17.1)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -53,7 +47,6 @@ GEM
     pry-debugger (0.2.2)
       debugger (~> 1.3)
       pry (~> 0.9.10)
-    rack (1.5.2)
     rake (10.1.1)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -80,8 +73,8 @@ PLATFORMS
 DEPENDENCIES
   database_cleaner
   fars!
+  pg
   pry-debugger
-  rack-contrib!
   rake
   rspec (>= 2.11)
   shoulda

@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec',        '>= 2.11'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'shoulda'
+  gem.add_development_dependency 'pg'
   gem.add_development_dependency 'database_cleaner'
 
 end
