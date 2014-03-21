@@ -5,17 +5,21 @@ describe Fars::BaseModelSerializer do
     class Master < ActiveRecord::Base
       has_many :slaves
     end
+
+    class MasterSerializer < Fars::BaseModelSerializer
+      attributes :id, :name, :data # attrs
+    end
   end
 
   context '#to_json' do
     before :each do
       @object = Master.create(id: 1, name: 'Object1', data: '123')
-      @json = {id: 1, name: 'Object1', data: '123'}.to_json
+      @fields = [:id, :name, :data]
+      @json = {master: {id: 1, name: 'Object1', data: '123'}}.to_json
     end
 
     it 'represent as json' do
-      @object.to_json.should == @json
+      MasterSerializer.new(@object, add_metadata: false, fields: @fields).to_json.should == @json
     end
   end
-
 end
