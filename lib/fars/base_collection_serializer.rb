@@ -5,12 +5,12 @@
 #
 class Fars::BaseCollectionSerializer
   def initialize(objects, opts={})
-    @api_version  = (self.to_s.match /(V\d+)::(\w+)Serializer/)[1] # V1
     @objects      = objects
     @scope        = opts[:scope]
     @fields       = opts[:fields]
     @add_metadata = opts[:add_metadata]
     @root_key     = opts.fetch(:root_key, get_root_key)
+    @api_version  = opts[:api_version]
     @item_serializer_class = get_item_serializer_class
   end
 
@@ -40,7 +40,7 @@ private
   attr_reader :api_version, :objects, :scope, :fields, :add_metadata, :root_key, :item_serializer_class
 
   def get_root_key
-    (self.to_s.match /#{api_version}::(\w+)Serializer/)[1].underscore.to_sym
+    (self.to_s.match /#{api_prefix}(\w+)Serializer/)[1].underscore.to_sym
   end
 
   def get_instance_root_key
@@ -50,5 +50,10 @@ private
 
   def get_item_serializer_class
     (self.class.to_s.gsub('Serializer', '').singularize + 'Serializer').constantize
+  end
+
+  # Returns {String} prefix for serializer class name using API version
+  def api_prefix
+    @api_version ? @api_version + '::' : ''
   end
 end
