@@ -9,10 +9,6 @@
 #     This lets you reuse it without determining known data
 class Fars::BaseModelSerializer
   class << self
-    def api_version
-      @api_version ||= (self.to_s.match /(V\d+)::(\w+)Serializer/)[1] # V1
-    end
-
     def attributes(*attrs)
       @attributes = attrs.map(&:to_sym)
     end
@@ -30,6 +26,16 @@ class Fars::BaseModelSerializer
     # Returns {Symbol} instance hash root key, as an underscored Model name
     def root_key
       model.to_s.underscore.to_sym
+    end
+
+    # Returns {String} capitalized API version
+    def api_version
+      @api_version # V1
+    end
+
+    # Returns {String} prefix for serializer class name using API version
+    def api_prefix
+      @api_version ? @api_version + '::' : ''
     end
 
     # Returns {Array} with names of Model relations. Consists of Symbols.
@@ -62,8 +68,7 @@ class Fars::BaseModelSerializer
 
     def resolve_serializer(relation_name)
       (
-        api_version +
-        '::' +
+        api_prefix +
         model.reflect_on_all_associations.
           find { |assoc| assoc.name == relation_name }.
             class_name.pluralize +
@@ -72,7 +77,7 @@ class Fars::BaseModelSerializer
     end
 
     def get_model
-      (self.to_s.match /#{api_version}::(\w+)Serializer/)[1].singularize.constantize
+      (self.to_s.match /#{api_prefix}(\w+)Serializer/)[1].singularize.constantize
     end
 
     def get_model_relations
@@ -100,12 +105,14 @@ class Fars::BaseModelSerializer
   #       evaluated only when actually called.
   #     - :add_metadata {Boolean} if to add a node '_metadata'
   #     - :root_key {Symbol} overwrites the default one from serializer's Class
+  #     - :api_version {String} is used when serializers can be different versions
   def initialize(object, opts={})
     @object       = object
     @scope        = opts[:scope]
     @fields       = opts[:fields]
     @add_metadata = opts.fetch(:add_metadata, true)
     @root_key     = opts.fetch(:root_key,     self.class.root_key)
+    @api_version  = opts[:api_version]
 
     @serialized_klass   = self.class.model # this goes first
     @all_attributes     = self.class.all_attributes
@@ -162,7 +169,7 @@ protected
 private
 
   # Things we get from options
-  attr_reader :api_version, :object, :fields, :root_key
+  attr_reader :object, :fields, :root_key, :api_version
 
   # Utility things
   attr_reader :serialized_klass
