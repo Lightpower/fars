@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS "public"."masters";
 CREATE TABLE "public"."masters" (
 	"id" int4 NOT NULL,
 	"name" varchar(255) NOT NULL,
-  "data" varchar(255) NOT NULL,
+  "data" varchar(255),
 	CONSTRAINT "masters_pkey" PRIMARY KEY ("id") NOT DEFERRABLE INITIALLY IMMEDIATE
 )
 WITH (OIDS=FALSE);
@@ -32,7 +32,7 @@ CREATE TABLE "public"."slaves" (
 	"id" int4 NOT NULL,
 	"master_id" int4,
   "name" varchar(255) NOT NULL,
-  "data" varchar(255) NOT NULL,
+  "data" varchar(255),
 	CONSTRAINT "slaves_pkey" PRIMARY KEY ("id") NOT DEFERRABLE INITIALLY IMMEDIATE
 )
 WITH (OIDS=FALSE);
