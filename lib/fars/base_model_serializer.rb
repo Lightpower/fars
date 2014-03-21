@@ -33,11 +33,6 @@ class Fars::BaseModelSerializer
       @api_version # V1
     end
 
-    # Returns {String} prefix for serializer class name using API version
-    def api_prefix
-      @api_version ? @api_version + '::' : ''
-    end
-
     # Returns {Array} with names of Model relations. Consists of Symbols.
     # Filtrated by #all_attributes
     def model_relations
@@ -90,6 +85,11 @@ class Fars::BaseModelSerializer
 
     def get_serializer_methods
       self.instance_methods & all_attributes
+    end
+
+    # Returns {String} prefix for serializer class name using API version
+    def api_prefix
+      @api_version ? @api_version + '::' : ''
     end
   end
 
