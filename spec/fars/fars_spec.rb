@@ -23,10 +23,6 @@ describe Fars::BaseModelSerializer do
     end
     class SlaveSerializer < Fars::BaseModelSerializer
       attributes :id, :name, :data # attrs
-
-      def meta
-        {'metadata' => :present}
-      end
     end
 
     class MastersSerializer < Fars::BaseCollectionSerializer ; end
@@ -75,6 +71,5 @@ describe Fars::BaseModelSerializer do
         fields: [:id, :name, :data, :slaves]
       ).to_json.should == json_data
     end
-
   end
 end
