@@ -33,7 +33,7 @@ describe Fars::BaseModelSerializer do
     class SlavesSerializer  < Fars::BaseCollectionSerializer ; end
   end
 
-  context '#to_json for instance' do
+  context '#to_json' do
     before :each do
       @object = Master.create(id: 1, name: 'Object1', data: '123')
       2.times.each {|i| Slave.create(id: i+1, master_id: @object.id, name: "Slave #{i+1}") }
