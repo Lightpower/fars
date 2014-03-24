@@ -17,12 +17,14 @@ class Fars::BaseCollectionSerializer
   def as_json
     items = []
 
-    the_class = item_serializer_class.new(nil,
-                                         scope:        @scope,
-                                         add_metadata: add_metadata,
-                                         fields:       fields,
-                                         root_key:     get_instance_root_key
-                                        )
+    the_class = item_serializer_class.new(
+      nil,
+      scope:        @scope,
+      add_metadata: add_metadata,
+      fields:       fields,
+      root_key:     get_instance_root_key,
+      api_version: api_version
+    )
 
     objects.each do |object|
       items << the_class.with_object(object).as_json

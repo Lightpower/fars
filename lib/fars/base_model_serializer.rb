@@ -163,7 +163,8 @@ protected
     klass.new(relation,
               root_key:     false,
               scope:        @scope,
-              add_metadata: add_metadata?).as_json
+              add_metadata: add_metadata?,
+              api_version:  api_version).as_json
   end
 
 private
