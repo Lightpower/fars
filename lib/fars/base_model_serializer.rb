@@ -30,7 +30,8 @@ class Fars::BaseModelSerializer
 
     # Returns {String} capitalized API version
     def api_version
-      @api_version # V1
+      namespace_array = name.split('::')
+      namespace_array.size > 1 ? namespace_array[0] : nil
     end
 
     # Returns {Array} with names of Model relations. Consists of Symbols.
@@ -51,8 +52,8 @@ class Fars::BaseModelSerializer
       @serializer_methods ||= get_serializer_methods
     end
 
-    def serializer_for_relation(name)
-      serializers_cache[name] ||= resolve_serializer(name)
+    def serializer_for_relation(name, _api_version=nil)
+      serializers_cache[name] ||= resolve_serializer(name, _api_version)
     end
 
   private
@@ -61,7 +62,7 @@ class Fars::BaseModelSerializer
       @serializers_cache ||= {}
     end
 
-    def resolve_serializer(relation_name)
+    def resolve_serializer(relation_name, _api_version=nil)
       (
         api_prefix +
         model.reflect_on_all_associations.
@@ -89,7 +90,7 @@ class Fars::BaseModelSerializer
 
     # Returns {String} prefix for serializer class name using API version
     def api_prefix
-      @api_version ? @api_version + '::' : ''
+      api_version ? api_version + '::' : ''
     end
   end
 
@@ -105,14 +106,12 @@ class Fars::BaseModelSerializer
   #       evaluated only when actually called.
   #     - :add_metadata {Boolean} if to add a node '_metadata'
   #     - :root_key {Symbol} overwrites the default one from serializer's Class
-  #     - :api_version {String} is used when serializers can be different versions
   def initialize(object, opts={})
     @object       = object
     @scope        = opts[:scope]
     @fields       = opts[:fields]
     @add_metadata = opts.fetch(:add_metadata, true)
     @root_key     = opts.fetch(:root_key,     self.class.root_key)
-    @api_version  = opts[:api_version]
 
     @serialized_klass   = self.class.model # this goes first
     @all_attributes     = self.class.all_attributes
@@ -163,14 +162,13 @@ protected
     klass.new(relation,
               root_key:     false,
               scope:        @scope,
-              add_metadata: add_metadata?,
-              api_version:  api_version).as_json
+              add_metadata: add_metadata?).as_json
   end
 
 private
 
   # Things we get from options
-  attr_reader :object, :fields, :root_key, :api_version
+  attr_reader :object, :fields, :root_key
 
   # Utility things
   attr_reader :serialized_klass
@@ -224,5 +222,10 @@ private
       when Symbol   then [fields.to_sym]
       when String   then [fields]
     end
+  end
+
+  # Returns {String} - API version is got by instance class
+  def api_version
+    self.class.api_version
   end
 end

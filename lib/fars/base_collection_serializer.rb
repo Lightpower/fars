@@ -4,13 +4,20 @@
 # It is used to represent collections
 #
 class Fars::BaseCollectionSerializer
+  class << self
+    # Returns {String} capitalized API version
+    def api_version
+      namespace_array = name.split('::')
+      namespace_array.size > 1 ? namespace_array[0] : nil
+    end
+  end
+
   def initialize(objects, opts={})
     @objects      = objects
     @scope        = opts[:scope]
     @fields       = opts[:fields]
     @add_metadata = opts[:add_metadata]
     @root_key     = opts.fetch(:root_key, get_root_key)
-    @api_version  = opts[:api_version]
     @item_serializer_class = get_item_serializer_class
   end
 
@@ -23,7 +30,6 @@ class Fars::BaseCollectionSerializer
       add_metadata: add_metadata,
       fields:       fields,
       root_key:     get_instance_root_key,
-      api_version: api_version
     )
 
     objects.each do |object|
@@ -37,9 +43,14 @@ class Fars::BaseCollectionSerializer
     MultiJson.dump(as_json)
   end
 
+  # Returns {String} - API version is got by instance class
+  def api_version
+    self.class.api_version
+  end
+
 private
 
-  attr_reader :api_version, :objects, :scope, :fields, :add_metadata, :root_key, :item_serializer_class
+  attr_reader :objects, :scope, :fields, :add_metadata, :root_key, :item_serializer_class
 
   def get_root_key
     (self.to_s.match /#{api_prefix}(\w+)Serializer/)[1].underscore.to_sym
@@ -56,6 +67,6 @@ private
 
   # Returns {String} prefix for serializer class name using API version
   def api_prefix
-    @api_version ? @api_version + '::' : ''
+    api_version ? api_version + '::' : ''
   end
 end
