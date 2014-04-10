@@ -6,7 +6,7 @@
 class Fars::BaseCollectionSerializer
   def initialize(objects, opts = {})
     @objects      = objects
-    @options      = opts
+    @options      = opts.slice(:scope, :fields, :add_metadata)
     @root_key     = opts.fetch(:root_key, get_root_key)
     @item_serializer_class = get_item_serializer_class
   end
