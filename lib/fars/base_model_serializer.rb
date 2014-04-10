@@ -28,12 +28,6 @@ class Fars::BaseModelSerializer
       model.to_s.underscore.to_sym
     end
 
-    # Returns {String} capitalized API version
-    def api_version
-      namespace_array = name.split('::')
-      namespace_array.size > 1 ? namespace_array[0] : nil
-    end
-
     # Returns {Array} with names of Model relations. Consists of Symbols.
     # Filtrated by #all_attributes
     def model_relations
@@ -52,8 +46,8 @@ class Fars::BaseModelSerializer
       @serializer_methods ||= get_serializer_methods
     end
 
-    def serializer_for_relation(name, _api_version=nil)
-      serializers_cache[name] ||= resolve_serializer(name, _api_version)
+    def serializer_for_relation(name)
+      serializers_cache[name] ||= resolve_serializer(name)
     end
 
   private
@@ -62,7 +56,7 @@ class Fars::BaseModelSerializer
       @serializers_cache ||= {}
     end
 
-    def resolve_serializer(relation_name, _api_version=nil)
+    def resolve_serializer(relation_name)
       (
         api_prefix +
         model.reflect_on_all_associations.
@@ -73,7 +67,7 @@ class Fars::BaseModelSerializer
     end
 
     def get_model
-      (self.to_s.match /#{api_prefix}(\w+)Serializer/)[1].singularize.constantize
+      self.to_s.demodulize.sub('Serializer', '').singularize.constantize
     end
 
     def get_model_relations
@@ -90,7 +84,7 @@ class Fars::BaseModelSerializer
 
     # Returns {String} prefix for serializer class name using API version
     def api_prefix
-      api_version ? api_version + '::' : ''
+      self.to_s.deconstantize.tap {|s| s << '::' unless s.blank? }
     end
   end
 
@@ -106,11 +100,11 @@ class Fars::BaseModelSerializer
   #       evaluated only when actually called.
   #     - :add_metadata {Boolean} if to add a node '_metadata'
   #     - :root_key {Symbol} overwrites the default one from serializer's Class
-  def initialize(object, opts={})
+  def initialize(object, opts = {})
     @object       = object
     @scope        = opts[:scope]
     @fields       = opts[:fields]
-    @add_metadata = opts.fetch(:add_metadata, true)
+    @add_metadata = opts.fetch(:add_metadata, self.respond_to?(:meta))
     @root_key     = opts.fetch(:root_key,     self.class.root_key)
 
     @serialized_klass   = self.class.model # this goes first
@@ -156,7 +150,7 @@ class Fars::BaseModelSerializer
 protected
 
   # TODO: Document
-  def serialize_relation(relation_name, relation=nil)
+  def serialize_relation(relation_name, relation = nil)
     klass = self.class.serializer_for_relation(relation_name)
     relation ||= object.send(relation_name)
     klass.new(relation,
@@ -219,13 +213,8 @@ private
     case fields
       when NilClass then all_attributes
       when Array    then fields.map(&:to_sym) | [:id]
-      when Symbol   then [fields.to_sym]
-      when String   then [fields]
+      when Symbol   then [fields]
+      when String   then [fields.to_sym]
     end
-  end
-
-  # Returns {String} - API version is got by instance class
-  def api_version
-    self.class.api_version
   end
 end

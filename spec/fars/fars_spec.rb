@@ -58,6 +58,17 @@ describe Fars::BaseModelSerializer do
       ).to_json.should == json_data
     end
 
+    it 'returns not all field, whithout metadata if serializer does not respond to meta method' do
+      json_data = {master: {id: 1, name: 'Object1'}}.to_json
+
+      MasterSerializer.any_instance.stub(:respond_to?).with(:meta).and_return(false)
+
+      MasterSerializer.new(
+        @object,
+        fields: [:id, :name]
+      ).to_json.should == json_data
+    end
+
     it 'returns all field with slaves' do
       json_data = {master: {id: 1, name: 'Object1', data: '123',
         slaves: [

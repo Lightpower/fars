@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fars (0.0.1)
+    fars (0.0.2)
       activerecord (>= 3.2)
 
 GEM
