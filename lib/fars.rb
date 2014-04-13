@@ -5,6 +5,9 @@ require 'fars/base_collection_serializer'
 require 'fars/model_serializable'
 require 'fars/relation_serializable'
 
+module Fars
+end
+
 class ActiveRecord::Base
   include Fars::ModelSerializable
 end
