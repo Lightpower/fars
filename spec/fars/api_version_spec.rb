@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Fars::BaseModelSerializer do
   before :all do
     ActiveSupport::Inflector.inflections do |inflect|
-     inflect.irregular 'slave', 'slaves'
+      inflect.irregular 'slave', 'slaves'
     end
 
     class Master < ActiveRecord::Base
@@ -34,7 +34,7 @@ describe Fars::BaseModelSerializer do
   context '#to_json' do
     before :each do
       @object = Master.create(id: 1, name: 'Object1', data: '123')
-      2.times.each {|i| Slave.create(id: i+1, master_id: @object.id, name: "Slave #{i+1}") }
+      1.upto(2) {|i| Slave.create(id: i, master_id: @object.id, name: "Slave #{i}") }
     end
 
     it 'returns all fields with metadata' do
@@ -46,7 +46,8 @@ describe Fars::BaseModelSerializer do
       V1::MasterSerializer.new(
         @object,
         add_metadata: true,
-        fields: [:id, :name, :data]
+        fields: [:id, :name, :data],
+        api_version: 'V1'
       ).to_json.should == json_data
     end
 
@@ -56,7 +57,8 @@ describe Fars::BaseModelSerializer do
       V1::MasterSerializer.new(
         @object,
         add_metadata: false,
-        fields: [:id, :name]
+        fields: [:id, :name],
+        api_version: 'V1'
       ).to_json.should == json_data
     end
 
@@ -70,7 +72,8 @@ describe Fars::BaseModelSerializer do
       V1::MasterSerializer.new(
         @object,
         add_metadata: false,
-        fields: [:id, :name, :data, :slaves]
+        fields: [:id, :name, :data, :slaves],
+        api_version: 'V1'
       ).to_json.should == json_data
     end
   end
