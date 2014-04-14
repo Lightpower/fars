@@ -18,3 +18,7 @@ end
 class Array
   include Fars::RelationSerializable
 end
+
+class Hash
+  include Fars::RelationSerializable
+end

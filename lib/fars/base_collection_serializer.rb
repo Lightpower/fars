@@ -34,14 +34,23 @@ class Fars::BaseCollectionSerializer
     end
     # Serialized model class name.
     @class_name = opts[:class_name]
-    @item_serializer_class = opts[:serializer].constantize if opts[:serializer]
+    if opts[:serializer]
+      if opts[:serializer].is_a? Proc
+        @item_serializer = opts[:serializer]
+      else
+        @item_serializer_class = opts[:serializer].constantize
+      end
+    end
     @api_version = opts[:api_version]
     @params = opts[:params] || {}
     @metadata = opts[:metadata]
-    # Options for model serializer.
-    @options = opts.slice(:scope, :fields, :add_metadata, :api_version, :params)
-    # If root_key is false, do not transfer this option to the model serializer class.
-    @options[:root_key] = item_root_key if @root_key
+    # Do not need options if serialize items with proc.
+    unless @item_serializer
+      # Options for model serializer.
+      @options = opts.slice(:scope, :fields, :add_metadata, :api_version, :params)
+      # If root_key is false, do not transfer this option to the model serializer class.
+      @options[:root_key] = item_root_key if @root_key
+    end
   end
 
   ##
@@ -51,10 +60,10 @@ class Fars::BaseCollectionSerializer
     items = []
 
     unless empty_array?
-      item_serializer = item_serializer_class.new(nil, options)
+      @item_serializer ||= item_serializer_class.new(nil, options)
 
       objects.each do |object|
-        items << item_serializer.with_object(object).as_json
+        items << item_serializer.call(object)
       end
     end
 
@@ -71,7 +80,7 @@ class Fars::BaseCollectionSerializer
 
 private
 
-  attr_reader :objects, :options, :root_key, :item_serializer_class, :api_version, :params, :metadata
+  attr_reader :objects, :options, :root_key, :api_version, :params, :metadata, :item_serializer
 
   ##
   # Checks if objets is not ActiveRecord::Relation and it's empty.

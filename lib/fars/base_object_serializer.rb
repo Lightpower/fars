@@ -29,6 +29,11 @@ class Fars::BaseObjectSerializer
     MultiJson.dump(as_json)
   end
 
+
+  def call(obj)
+    with_object(obj).as_json
+  end
+
 private
 
   # Things we get from options
