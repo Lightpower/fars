@@ -1,7 +1,7 @@
 ##
 # Class: BaseCollectionSerializer
 #
-# It is used to represent collections
+# It is used to represent collection
 #
 class Fars::BaseCollectionSerializer
   ##
@@ -22,7 +22,7 @@ class Fars::BaseCollectionSerializer
   #     - :serializer {String} model serializer class name
   #     - :metadata {Hash} optional hash with metadata (root_key should not be false)
   #
-  def initialize(objects, opts = {})
+  def initialize(objects, opts = {}, &block)
     @objects = objects
     if !opts.has_key?(:root_key) && !opts[:class_name] && empty_array?
       raise ArgumentError, 'Specify :root_key or model :class_name for empty array.'
@@ -40,6 +40,8 @@ class Fars::BaseCollectionSerializer
       else
         @item_serializer_class = opts[:serializer].constantize
       end
+    elsif block_given?
+      @item_serializer = block
     end
     @api_version = opts[:api_version]
     @params = opts[:params] || {}

@@ -1,5 +1,5 @@
 module Fars::RelationSerializable
-  def serialize(opts = {})
-    Fars::BaseCollectionSerializer.new(self, opts).to_json
+  def serialize(opts = {}, &block)
+    Fars::BaseCollectionSerializer.new(self, opts, &block).to_json
   end
 end

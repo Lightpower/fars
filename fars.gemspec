@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# encoding: utf-8
 require File.expand_path('../lib/fars/version', __FILE__)
 
 Gem::Specification.new do |gem|
@@ -15,12 +15,11 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Fars::VERSION
 
-  gem.add_dependency  'activerecord',  '>= 3.2'
+  gem.add_dependency  'activerecord', '>= 3.2'
 
-  gem.add_development_dependency 'rspec',        '>= 2.11'
+  gem.add_development_dependency 'rspec', '>= 2.11'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'shoulda'
   gem.add_development_dependency 'pg'
   gem.add_development_dependency 'database_cleaner'
-
 end

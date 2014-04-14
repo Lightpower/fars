@@ -32,3 +32,9 @@ end
 root      = File.dirname(__FILE__)
 db_config = YAML.load_file("#{root}/config/database.yml")
 ActiveRecord::Base.establish_connection(db_config)
+
+Dir["./spec/support/**/*.rb"].each { |f| require f }
+
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.irregular 'slave', 'slaves'
+end
