@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ActiveRecord::Relation do
+describe 'ActiveRecord::Relation#serialize' do
   before(:each) do
     1.upto(2) { |i| Master.create(id: i, name: "Object#{i}", data: '123') }
     1.upto(3) { |i| Slave.create(id: i, master_id: (i % 2) + 1, name: "Slave #{i}") }
