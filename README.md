@@ -31,7 +31,7 @@ Create serializer class named `CustomerSerializer` or `V1::CustomerSerializer`
 ```rb
 class CustomerSerializer < Fars::BaseModelSerializer
   attributes :id, :name, :data, # attrs
-                  :created_at, :updated_at # methods
+                  :created_at, :updated_at, # methods
                   :orders # relations
 
   def created_at
@@ -111,7 +111,7 @@ depending on internal serializer's logic.
 ```rb
 class CustomerSerializer < Fars::BaseModelSerializer
   attributes :id, :name, :data, # attrs
-                  :created_at, :updated_at # methods
+                  :created_at, :updated_at, # methods
                   :orders # relations
 
   def created_at
