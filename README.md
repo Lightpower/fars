@@ -48,7 +48,6 @@ class CustomerSerializer < Fars::BaseModelSerializer
     { abilities: abilities }
   end
 end
-
 ```
 
 Then you can call #serialize method on object
@@ -58,7 +57,8 @@ Then you can call #serialize method on object
 Customer.first.serialize scope: current_user
 ```
 
-Available options are `:api_version` and `:serializer`
+Available options are: `:api_version`, `:serializer`, `:scope`, `:fields`, `:add_metadata`, `:root_key`, `:params`.
+Description of this options provided in [next section](#serialize-relation).
 
 ```rb
 customer = Customer.first
@@ -201,7 +201,6 @@ class StatSerializer < Fars::BaseObjectSerializer
 end
 
 hash.serialize root_key: :stats, serializer: 'StatSerializer'
-
 ```
 
 This will produce:
