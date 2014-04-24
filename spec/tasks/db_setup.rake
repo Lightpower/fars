@@ -14,7 +14,7 @@ namespace :spec do
     task :migrate do
       ActiveRecord::Base.establish_connection(db_config)
 
-      ActiveRecord::Base.connection.execute(<<SQL
+      ActiveRecord::Base.connection.execute(<<-SQL
 DROP TABLE IF EXISTS "public"."masters";
 
 CREATE TABLE "public"."masters" (
