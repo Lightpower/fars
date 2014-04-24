@@ -53,7 +53,7 @@ end
 Then you can call #serialize method on object
 
 ```rb
-# Option scope is optional, can be used for providing methadata.
+# Option :scope is optional, can be used for providing metadata.
 Customer.first.serialize scope: current_user
 ```
 
@@ -69,15 +69,15 @@ customer.serialize
 # whould be serizlized with V1::CustomerSerializer class
 customer.serialize api_version: 'V1'
 
-# whould be serizlized with V1::ExtendCustomerSerializer class
-customer.serialize api_version: 'V1', serializer: "ExtendCustomerSerializer"
+# whould be serizlized with V1::ExtendedCustomerSerializer class
+customer.serialize api_version: 'V1', serializer: "ExtendedCustomerSerializer"
 ```
 
-You can specify model calss and item root key in serializer:
+You can specify model class and item root key in serializer:
 
 
 ```rb
-class ExtendCustomerSerializer < Fars::BaseModelSerializer
+class ExtendedCustomerSerializer < Fars::BaseModelSerializer
   self.model = Customer
   self.root_key = :client
 end
@@ -99,7 +99,7 @@ customers.serialize
   fields: [:id, :name, :updated_at], # array of needed fields
   scope: current_user, # user or ability, can be used in serializer meta method
   add_metadata: true, # add or not item metadata, default is true if serializer respond_to? :meta
-  serializer: "ExtendCustomerSerializer", # custom model serializer class
+  serializer: "ExtendedCustomerSerializer", # custom model serializer class
   class_name: "Client", # item model class (can construct serializer class name from it), useful for array of objects
   metadata: { limit: 10, offset: 50 }, # collection metadata (:root_key cannot be omitted)
   params: { format: 'long' } # any parameters, can be accessed in serializes class
