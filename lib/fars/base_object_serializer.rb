@@ -77,12 +77,12 @@ class Fars::BaseObjectSerializer
   end
 
   def as_json
-    all_attrs = available_attributes
     item = {}
-    (all_attrs - requested_serializer_methods).each do |m|
+    ((requested_attributes - requested_serializer_methods) & available_attributes).each do |m|
+      next if m == :id && !object.respond_to?(:id)
       item[m] = object.public_send(m)
     end
-    (all_attrs & requested_serializer_methods).each do |m|
+    (requested_serializer_methods & available_attributes).each do |m|
       item[m] = self.public_send(m)
     end
     hash = { root_key => item }
