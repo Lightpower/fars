@@ -212,6 +212,45 @@ This will produce:
 ] }.to_json
 ```
 
+### Serialize any object with serializer inherited from Fars::BaseObjectSerializer
+
+```rb
+Book = Struct.new(:isbn, :title, :author, :price, :count)
+b1 = Book.new('isbn1', 'title1', 'author1', 10, nil)
+b2 = Book.new('isbn2', 'title2', 'author2', 20.0, 4)
+b3 = Book.new('isbn3', 'title3', 'author3', 30.5, 7)
+book = b1
+books = [b1, b2, b3]
+
+class BookSerializer < Fars::BaseObjectSerializer
+  attributes :isbn, :title, :author, # attrs
+             :price, :count # methods
+
+  def price
+    "%.2f" % object.price
+  end
+
+  def count
+    object.count.to_i
+  end
+end
+
+# serializes any object with appropriate serializer
+BookSerializer.new(book, fields: [:isbn, :title, :price]).to_json
+# => { book: { isbn: 'isbn1', title: 'title1', price: '10.00' } }.to_json
+
+# serialize collection
+books.serialize(root_key: :books, # can be resolved automatically for non empty array
+  serializer: 'BookSerializer', # can be resolved automatically for non empty array
+  fields: [:isbn, :title, :price]) # all by default
+
+# => { books: [
+#  { book: { isbn: 'isbn1', title: 'title1', price: '10.00' } },
+#  { book: { isbn: 'isbn2', title: 'title2', price: '20.00' } },
+#  { book: { isbn: 'isbn3', title: 'title3', price: '30.50' } }
+# ] }.to_json
+```
+
 ## Contributing
 
 1. Fork it ( http://github.com/Lightpower/fars/fork )
