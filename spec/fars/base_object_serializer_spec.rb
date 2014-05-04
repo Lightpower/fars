@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Fars::BaseObjectSerializer do
-  before { Book = Struct.new(:isbn, :title, :author, :price, :count) }
+  before(:all) { Book = Struct.new(:isbn, :title, :author, :price, :count) }
   let(:book) { Book.new('isbn1', 'title1', 'author1', 10, nil) }
   let(:book2) { Book.new('isbn2', 'title2', 'author2', 20.0, 4) }
   let(:book3) { Book.new('isbn3', 'title3', 'author3', 30.5, 7) }
