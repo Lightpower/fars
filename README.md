@@ -219,6 +219,7 @@ Book = Struct.new(:isbn, :title, :author, :price, :count)
 b1 = Book.new('isbn1', 'title1', 'author1', 10, nil)
 b2 = Book.new('isbn2', 'title2', 'author2', 20.0, 4)
 b3 = Book.new('isbn3', 'title3', 'author3', 30.5, 7)
+book = b1
 books = [b1, b2, b3]
 
 class BookSerializer < Fars::BaseObjectSerializer
