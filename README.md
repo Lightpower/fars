@@ -1,4 +1,4 @@
-![fars](raw/master/images/fars.png)
+![fars](images/fars.png)
 
 # Fast ActiveRecord Serializer
 
