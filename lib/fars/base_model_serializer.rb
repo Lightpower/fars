@@ -31,17 +31,17 @@ class Fars::BaseModelSerializer < Fars::BaseObjectSerializer
     # as we can re-use one class of serializer for
     # many objects, we need to re-evaluate list
     # of available_attributes for each of them
-    all_attrs = available_attributes
-    item      = {}
-    (requested_model_methods & all_attrs).each do |attr|
+    item = {}
+    requested_model_methods.each do |attr|
       item[attr] = object.public_send(attr)
     end
-    (requested_serializer_methods & all_attrs).each do |meth|
+    requested_serializer_methods.each do |meth|
       item[meth] = self.public_send(meth)
     end
-    (requested_model_relations & all_attrs).each do |rel|
+    requested_model_relations.each do |rel|
       item[rel] = serialize_relation(rel)
     end
+    return item unless root_key
     hash = { root_key => item }
     hash[:_metadata] = meta if add_metadata?
     hash
@@ -71,5 +71,20 @@ private
       scope: @scope,
       add_metadata: add_metadata?,
       api_version: api_version).as_json
+  end
+
+  ##
+  # Requested fields.
+  # If fields is Array ads primary_key attribute.
+  #
+  def fields
+    @fields_with_id ||= begin
+      return unless @fields
+      if @fields.is_a?(Array)
+        @fields | [self.class.model.primary_key.to_sym]
+      else
+        @fields
+      end
+    end
   end
 end
