@@ -8,6 +8,10 @@ module V1
       '2014-04-14'
     end
 
+    def available_attributes
+      object.name == 'NO DATA' ? [:id, :name, :updated_at, :slaves] : all_attributes
+    end
+
     def meta
       { 'metadata' => :present }
     end

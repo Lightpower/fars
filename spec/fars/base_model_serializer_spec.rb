@@ -90,6 +90,15 @@ describe Fars::BaseModelSerializer do
           fields: [:name, :data]
         ).to_json.should == json_data
       end
+
+      it 'returns all field filtered by available_attributes' do
+        object_with_no_access_to_data = Master.create(id: 2, name: 'NO DATA', data: 'secret data')
+        json_data = { master: { id: 2, name: 'NO DATA' }, _metadata: { metadata: :present } }.to_json
+
+        MasterSerializer.new(object_with_no_access_to_data,
+          fields: [:id, :name, :data]
+        ).to_json.should == json_data
+      end
     end
   end
 

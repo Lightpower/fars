@@ -31,14 +31,15 @@ class Fars::BaseModelSerializer < Fars::BaseObjectSerializer
     # as we can re-use one class of serializer for
     # many objects, we need to re-evaluate list
     # of available_attributes for each of them
+    all_attrs = available_attributes
     item = {}
-    requested_model_methods.each do |attr|
+    (requested_model_methods & all_attrs).each do |attr|
       item[attr] = object.public_send(attr)
     end
-    requested_serializer_methods.each do |meth|
+    (requested_serializer_methods & all_attrs).each do |meth|
       item[meth] = self.public_send(meth)
     end
-    requested_model_relations.each do |rel|
+    (requested_model_relations & all_attrs).each do |rel|
       item[rel] = serialize_relation(rel)
     end
     return item unless root_key

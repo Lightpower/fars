@@ -77,11 +77,12 @@ class Fars::BaseObjectSerializer
   end
 
   def as_json
+    all_attrs = available_attributes
     item = {}
-    (requested_attributes - requested_serializer_methods).each do |m|
+    ((requested_attributes - requested_serializer_methods) & all_attrs).each do |m|
       item[m] = object.public_send(m)
     end
-    requested_serializer_methods.each do |m|
+    (requested_serializer_methods & all_attrs).each do |m|
       item[m] = self.public_send(m)
     end
     return item unless root_key
@@ -123,13 +124,14 @@ private
 
   ##
   # List of attributes requested to be shown.
-  # Requested :fields from options (wrapped into Array) filtered by available_attributes
+  # This is frequently done by :fields HTTP request
+  # parameter
   #
   def requested_attributes
     @requested_attributes ||= if fields
-      Array.wrap(fields).map(&:to_sym) & available_attributes
+      Array.wrap(fields).map(&:to_sym)
     else
-      available_attributes
+      all_attributes
     end
   end
 
