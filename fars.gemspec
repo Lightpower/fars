@@ -15,8 +15,9 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Fars::VERSION
 
-  gem.add_dependency  'activerecord', '>= 3.2'
-
+  gem.add_dependency 'activerecord', '>= 3.2'
+  gem.add_dependency 'json', '>= 1.7.7'
+  gem.add_dependency 'multi_json', '>= 1.7.3'
   gem.add_development_dependency 'rspec', '>= 2.11'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'shoulda'

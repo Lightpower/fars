@@ -25,12 +25,18 @@ class Fars::BaseModelSerializer < Fars::BaseObjectSerializer
     def model_relations
       @model_relations ||= (model.reflect_on_all_associations.map { |r| r.name.to_sym } - serializer_methods) & all_attributes
     end
+
+    ##
+    # Returns: {Symbol}
+    #
+    def primary_key
+      @primary_key ||= model.primary_key.to_sym
+    end
   end
 
   def as_json
-    # as we can re-use one class of serializer for
-    # many objects, we need to re-evaluate list
-    # of available_attributes for each of them
+    # As we can reuse one instance of serializer for several objects,
+    # we need to reevaluate list of available_attributes (and filter all methods) for each object.
     all_attrs = available_attributes
     item = {}
     (requested_model_methods & all_attrs).each do |attr|
@@ -72,20 +78,5 @@ private
       scope: @scope,
       add_metadata: add_metadata?,
       api_version: api_version).as_json
-  end
-
-  ##
-  # Requested fields.
-  # If fields is Array ads primary_key attribute.
-  #
-  def fields
-    @fields_with_id ||= begin
-      return unless @fields
-      if @fields.is_a?(Array)
-        @fields | [self.class.model.primary_key.to_sym]
-      else
-        @fields
-      end
-    end
   end
 end
