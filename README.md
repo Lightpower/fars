@@ -1,4 +1,6 @@
-# Fast ActiveRecord Serializer (fars).
+![fars](images/fars.png)
+
+# Fast ActiveRecord Serializer
 
 JSON serialization of ActiveRecord models and colections (relations or array of objects). Also can serialzie any Array or Hash with minimal syntax.
 

@@ -1,3 +1,5 @@
+require 'multi_json'
+
 ##
 # Class: BaseObjectSerializer
 #
@@ -45,6 +47,14 @@ class Fars::BaseObjectSerializer
     def serializer_methods
       @serializer_methods ||= self.instance_methods & all_attributes
     end
+
+    ##
+    # Returns: {Symbol}
+    #
+    def primary_key
+      @primary_key ||= :id
+    end
+    attr_writer :primary_key
   end
 
   ##
@@ -77,14 +87,16 @@ class Fars::BaseObjectSerializer
   end
 
   def as_json
+    # NOTE: filtering by available attributes can be different for each object.
+    all_attrs = available_attributes
     item = {}
-    ((requested_attributes - requested_serializer_methods) & available_attributes).each do |m|
-      next if m == :id && !object.respond_to?(:id)
+    (all_attrs & requested_object_methods).each do |m|
       item[m] = object.public_send(m)
     end
-    (requested_serializer_methods & available_attributes).each do |m|
+    (requested_serializer_methods & all_attrs).each do |m|
       item[m] = self.public_send(m)
     end
+    return item unless root_key
     hash = { root_key => item }
     hash[:_metadata] = meta if add_metadata?
     hash
@@ -117,22 +129,25 @@ private
 
   delegate :all_attributes, :serializer_methods, to: :'self.class'
 
+  def requested_object_methods
+    @requested_object_methods ||= requested_attributes - requested_serializer_methods
+  end
+
   def requested_serializer_methods
     @requested_serializer_methods ||= serializer_methods & requested_attributes
   end
 
   ##
-  # List of attributes requested to be shown.
-  # This is frequently done by :fields HTTP request
-  # parameter
+  # List of requested attributes.
+  # Returns {Array}
   #
   def requested_attributes
     @requested_attributes ||= begin
       case fields
       when NilClass then all_attributes
-      when Array    then fields.map(&:to_sym) | [:id]
-      when Symbol   then [fields]
-      when String   then [fields.to_sym]
+      when Array then fields.map(&:to_sym) | [self.class.primary_key]
+      when Symbol then [fields]
+      when String then [fields.to_sym]
       end
     end
   end

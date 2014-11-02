@@ -26,10 +26,20 @@ describe Fars::BaseObjectSerializer do
   end
 
   it 'serializes collection which consists of objects of same tipe with appropriate serializer' do
-    books.serialize(root_key: :books, serializer: 'BookSerializer', fields: [:isbn, :title, :price]).should =={ books: [
+    books.serialize(root_key: :books, serializer: 'BookSerializer', fields: [:isbn, :title, :price]).should == { books: [
       { book: { isbn: 'isbn1', title: 'title1', price: '10.00' } },
       { book: { isbn: 'isbn2', title: 'title2', price: '20.00' } },
       { book: { isbn: 'isbn3', title: 'title3', price: '30.50' } }
     ] }.to_json
+  end
+
+  it 'includes only requested fields' do
+    BookSerializer.new(book, fields: [:isbn, :title], root_key: false).as_json.should ==
+      { isbn: 'isbn1', title: 'title1' }
+  end
+
+  it 'filters requested attributes with available_attributes' do
+    BookSerializer.new(book, fields: [:isbn, :orders_count, :title, :price]).as_json.should ==
+      { book: { isbn: 'isbn1', title: 'title1', price: '10.00' } }
   end
 end
